@@ -1,0 +1,18 @@
+# OS / editor junk
+.DS_Store
+**/.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Vault-internal working docs (not for the public repo).
+# The written report is the intended public writeup; these stay local.
+Session Logs/
+Hub (C).md
+FRB Morphological Anomaly Detection - Project Brief (C).md
+Phase 1/Phase 1 Methods Rationale (C).md
+reports/Phase 1/Phase 1 Plan.md
+reports/Phase 1/Phase 1 Report - Plan (C).md
+reports/Phase 1/Phase 1 Understanding Check (C).md

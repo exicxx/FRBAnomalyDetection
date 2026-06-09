@@ -1,0 +1,12 @@
+# Python packages this project depends on.
+# Add a line here whenever the code starts using (importing) a new library.
+# Built-in modules (xml, pathlib, etc.) come with Python and are not listed.
+#
+# To recreate this set elsewhere:  pip install -r requirements.txt
+
+pandas
+numpy
+scikit-learn
+isotree
+jupyterlab
+matplotlib

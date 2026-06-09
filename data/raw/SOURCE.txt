@@ -1,0 +1,10 @@
+Source: VizieR J/ApJS/257/59/table2 (CHIME/FRB Catalog 1, Amiri et al. 2021, ApJS 257, 59)
+Downloaded: Thu May 28 14:43:48 BST 2026
+URL: https://vizier.cds.unistra.fr/viz-bin/votable?-source=J/ApJS/257/59/table2&-out.max=unlimited&-out.all
+
+Source: CANFAR data archive, AstroDataCitationDOI CISTI.CANFAR/25.0066 (CHIME/FRB Catalog 2, The CHIME/FRB Collaboration 2026, ApJS 283; arXiv:2601.09399)
+Downloaded: Fri Jun  5 2026
+File: chimefrbcat2.csv (3.87 MB), from the table/ subdirectory. CSV chosen over the fits/json/npy copies for a transparent plain-text read.
+DOI: https://doi.org/10.11570/25.0066
+Path: /storage/list/AstroDataCitationDOI/CISTI.CANFAR/25.0066/data/table/chimefrbcat2.csv
+Note: the official page https://www.chime-frb.ca/catalog2 was returning HTTP 500, so the data was pulled from the CANFAR DOI archive instead. Same catalogue.
