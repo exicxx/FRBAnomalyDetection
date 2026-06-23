@@ -28,19 +28,17 @@ Phase 2 is measured.
 All data is public CHIME/FRB catalogue data. Provenance is recorded in
 [`data/raw/SOURCE.txt`](data/raw/SOURCE.txt).
 
-- **Catalog 1** (development / validation baseline): VizieR `J/ApJS/257/59/table2`,
-  Amiri et al. 2021, ApJS 257, 59.
-- **Catalog 2** (headline dataset, ~4,500 bursts): CANFAR data archive,
+- **Catalog 2** (~4,500 bursts): CANFAR data archive,
   DOI [10.11570/25.0066](https://doi.org/10.11570/25.0066), The CHIME/FRB
   Collaboration 2026, ApJS 283 (arXiv:2601.09399).
 
 ## Method (Phase 1)
 
 Each burst is described by its tabulated morphological parameters (width,
-bandwidth, fluence, spectral index, and so on). Catalog 1 uses nine features;
-Catalog 2 uses eight (scattering time is dropped, because Catalog 2 stores it as
-zero for roughly 60% of bursts, which would introduce a brightness selection
-effect into the analysis).
+bandwidth, fluence, spectral index, and so on). Eight features are used;
+scattering time is excluded because Catalog 2 stores it as zero for roughly
+60% of bursts, which would introduce a brightness selection effect into the
+analysis.
 
 Three complementary unsupervised outlier scores are computed per burst:
 
@@ -75,14 +73,14 @@ Top non-repeater anomalies feeding the Phase 2 shortlist: **FRB20200321E** and
 ## Repository layout
 
 ```
-src/frb_anomaly/        Shared Python module (catalogue readers etc.)
-Phase 1/notebooks/cat1/ Catalog 1 pipeline: cleaning, methods, validation
-Phase 1/notebooks/cat2/ Catalog 2 pipeline (the headline run)
+src/frb_anomaly/        Shared Python module (catalogue readers, utilities)
+Phase 1/notebooks/cat2/ Catalog 2 pipeline: cleaning, methods, validation
 Phase 1/scripts/        One-off exploration scripts
-data/raw/               Downloaded catalogues + SOURCE.txt provenance
+data/raw/               Downloaded catalogue + SOURCE.txt provenance
 data/processed/         Feature tables and method scores produced by the notebooks
 reports/                Result figures (written report to follow)
-requirements.txt        Python dependencies
+requirements.txt        Runtime dependencies
+requirements-dev.txt    Development dependencies (pytest)
 ```
 
 ## Reproducing
@@ -92,11 +90,17 @@ pip install -r requirements.txt
 jupyter lab
 ```
 
-Run the notebooks in order within each catalogue folder: `01_cleaning`, then
-`02_methods`, then `03_validation`. They read from `data/raw/`, write feature
-tables and scores to `data/processed/phase_1/`, and write figures to
-`reports/Phase 1/figures/`. Developed against Python 3.11 with numpy, pandas,
-scikit-learn, isotree, and matplotlib.
+Run the notebooks in order within `Phase 1/notebooks/cat2/`: `01_cleaning_cat2`,
+then `02_methods_cat2`, then `03_validation_cat2`. They read from `data/raw/`,
+write feature tables and scores to `data/processed/phase_1/`, and write figures
+to `reports/Phase 1/figures/`. Developed against Python 3.11.
+
+To run the test suite:
+
+```bash
+pip install -r requirements-dev.txt
+pytest
+```
 
 ## References
 

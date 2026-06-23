@@ -18,7 +18,6 @@ import pandas as pd
 # Project root is two levels up from this file: <project>/src/frb_anomaly/data.py
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DATA_RAW = PROJECT_ROOT / "data" / "raw"
-CATALOG1_VOTABLE = DATA_RAW / "chime_cat1_table2.vot"
 CATALOG2_CSV = DATA_RAW / "chimefrbcat2.csv"
 
 # VOTable declares a type per column; these are the ones we read as numbers.
@@ -66,11 +65,6 @@ def read_votable(path):
         if f["datatype"] in _NUMERIC_VOTABLE_TYPES:
             df[f["name"]] = pd.to_numeric(df[f["name"]], errors="coerce")
     return fields, df
-
-
-def load_catalog1():
-    """Load the Catalog 1 burst table (table2) as (fields, df)."""
-    return read_votable(CATALOG1_VOTABLE)
 
 
 def load_catalog2():
