@@ -13,8 +13,7 @@ framing would miss.
 
 - **Phase 1 (tabulated-parameter baseline): analytically complete.** Cleaning,
   three outlier-detection methods, and a source-level validation test are all
-  built and run end to end on both catalogues. A short written report is in
-  progress.
+  built and run end to end on Catalog 2. A short written report is in progress.
 - **Phase 2 (the core): not started.** Unsupervised representation learning on
   the dynamic spectra (waterfalls), with a systematic instrumental-vs-astrophysical
   triage of the outliers and a comparison against the Phase 1 baseline.
@@ -82,6 +81,29 @@ reports/                Result figures (written report to follow)
 requirements.txt        Runtime dependencies
 requirements-dev.txt    Development dependencies (pytest)
 ```
+
+## Package
+
+`src/frb_anomaly/` is an importable Python package containing shared utilities
+used across the analysis notebooks.
+
+`data.py` provides three public functions:
+
+- `read_votable(path)` -- hand-parses a VOTable file (the XML catalogue format
+  used by CHIME/FRB and IVOA-compliant archives) into a `(fields, df)` pair.
+  `fields` is a list of dicts describing each column (name, datatype, unit,
+  description). `df` is a pandas DataFrame with numeric columns coerced from
+  text and empty cells left as NaN. Parsing uses the Python standard library
+  only, so every step is transparent.
+- `load_catalog2()` -- loads the Catalog 2 CSV from `data/raw/` and returns a
+  DataFrame directly.
+- `_local(tag)` -- strips the XML namespace prefix from a tag string so element
+  matching works regardless of the namespace URL declared in the file.
+
+The test suite in `tests/test_data.py` covers all three: unit tests for `_local`
+and `read_votable` run against a small hand-written fixture VOTable (no real data
+file needed), and integration tests for `load_catalog2` run against the real
+catalogue and assert expected columns, row count, and numeric dtypes.
 
 ## Reproducing
 

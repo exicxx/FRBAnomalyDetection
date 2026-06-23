@@ -1,13 +1,11 @@
-"""Loading the CHIME/FRB catalogue tables.
+"""Loading the CHIME/FRB Catalog 2 burst table.
 
-Phase 1 uses Catalog 1 (Amiri et al. 2021, ApJS 257, 59), downloaded from VizieR
-as a VOTable. We parse the VOTable with the standard library so the read is fully
-transparent: no library does anything to the numbers that we cannot see here.
+Catalog 2 (The CHIME/FRB Collaboration 2026, ApJS 283) is downloaded from the
+CANFAR archive as a plain CSV. pandas reads it directly; nothing is hidden.
 
-Catalog 2 (The CHIME/FRB Collaboration 2026, ApJS 283) is the larger follow-up
-catalogue, downloaded from the CANFAR archive as a plain CSV. Because it is already
-plain text, pandas reads it directly and there is nothing hidden. See SOURCE.txt in
-data/raw for the exact provenance of both catalogues.
+The VOTable utilities (read_votable, _local) are kept as general-purpose tools
+because the VOTable format is used across CHIME/FRB and IVOA-compliant archives
+and may be needed in later phases. See data/raw/SOURCE.txt for data provenance.
 """
 
 import xml.etree.ElementTree as ET
