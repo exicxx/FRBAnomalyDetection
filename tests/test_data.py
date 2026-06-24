@@ -60,7 +60,9 @@ def test_read_votable_numeric_columns_are_float(votable_path):
 
 def test_read_votable_string_column_stays_string(votable_path):
     _, df = read_votable(votable_path)
-    assert pd.api.types.is_object_dtype(df["source"])
+    # The char column must stay text, not be coerced to numbers. Assert "not numeric"
+    # rather than object dtype, which stays valid under the pandas 3.0 string dtype.
+    assert not pd.api.types.is_numeric_dtype(df["source"])
 
 
 def test_read_votable_empty_cell_becomes_nan(votable_path):
