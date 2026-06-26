@@ -6,6 +6,7 @@
 
 pandas
 numpy
+scipy
 scikit-learn
 isotree
 jupyterlab
