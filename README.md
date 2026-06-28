@@ -11,16 +11,18 @@ framing would miss.
 
 ## Status
 
-- **Phase 1 (tabulated-parameter baseline): analytically complete.** Cleaning,
-  three outlier-detection methods, and a source-level validation test are all
-  built and run end to end on Catalog 2. A short written report is in progress.
-- **Phase 2 (the core): not started.** Unsupervised representation learning on
-  the dynamic spectra (waterfalls), with a systematic instrumental-vs-astrophysical
-  triage of the outliers and a comparison against the Phase 1 baseline.
+- **Phase 1 (tabulated-parameter baseline): analytically complete.** The full
+  Catalog 2 pipeline is built and run end to end: cleaning, six unsupervised
+  outlier-detection methods, validation of the detector by injection-recovery, a
+  real-data specificity check, and a flagged candidate shortlist. A short written
+  report is in progress.
+- **Phase 2 (the core): not started.** Unsupervised representation learning on the
+  dynamic spectra (waterfalls), starting from the Phase 1 candidates, with an
+  instrumental-vs-astrophysical triage and a comparison against this baseline.
 
-Phase 1 is deliberately framed as preliminary baseline work, not the end goal.
-It exists to learn the data hands-on and to establish the baseline against which
-Phase 2 is measured.
+Phase 1 is deliberately framed as preliminary baseline work, not the end goal. It
+exists to learn the data hands-on and to establish the baseline against which Phase
+2 is measured.
 
 ## Data
 
@@ -33,77 +35,85 @@ All data is public CHIME/FRB catalogue data. Provenance is recorded in
 
 ## Method (Phase 1)
 
-Each burst is described by its tabulated morphological parameters (width,
-bandwidth, fluence, spectral index, and so on). Eight features are used;
-scattering time is excluded because Catalog 2 stores it as zero for roughly
-60% of bursts, which would introduce a brightness selection effect into the
-analysis.
+Each burst is described by its tabulated morphological parameters: dispersion
+measure, width, flux, fluence, two empirical spectral-shape parameters, peak
+frequency and bandwidth. Eight features are used; scattering time is excluded
+because Catalog 2 stores it as zero for roughly 60% of bursts, which would
+introduce a brightness selection effect.
 
-Three complementary unsupervised outlier scores are computed per burst:
+Six unsupervised, non-parametric outlier scores are computed per burst, chosen to
+span the standard anomaly geometries (Chandola, Banerjee and Kumar 2009): Local
+Outlier Factor (local density), kNN distance (global isolation), Extended Isolation
+Forest (partition-based), CBLOF (cluster-based, for collective anomalies), a
+random-subspace ensemble (feature bagging, for correlation-breaking anomalies) and
+a non-parametric conditional detector (for context-dependent anomalies). Scoring is
+label-blind: the repeater tag is not used.
 
-- **Mahalanobis distance** (distance from the population centre in whitened space)
-- **Local Outlier Factor (LOF)** (local-density-based)
-- **Extended Isolation Forest (EIF)** (partition-based)
+### Validation by injection-recovery
 
-Because there is no ground-truth "anomaly" label, the scores are validated against
-a proxy: known repeaters should sit toward the anomalous tail. A source-level
-permutation test (per-source aggregation, so the result is not driven by a couple
-of prolific repeaters) reports both a ranking AUC and top-K tail enrichment, with
-Bonferroni correction across methods.
+There is no ground-truth anomaly label, so the detector is validated by
+injection-recovery rather than against a proxy. Synthetic anomalies of known
+geometry (global, local, collective, subspace, contextual) are injected into the
+real feature table across a range of strengths; each method scores the augmented
+data blind, and recovery is the fraction of injected anomalies ranked into the
+anomalous tail. This measures, per geometry, how sensitive the detector is and
+which geometries it is blind to.
+
+Sensitivity is only half the question: a method can recover injected anomalies
+perfectly while flagging everything on real data. A specificity check on the real
+bursts (score concentration, and stability of the top-ranked bursts across random
+seeds) is therefore applied before a method is trusted.
 
 ## Key Phase 1 result (Catalog 2)
 
-On the honest, source-controlled tests, the signal is real but more nuanced than
-a naive read suggests:
-
-- **Per-sub-burst tail enrichment** (top 5/10/20%) is significant for all three
-  methods (p = 0.0001).
-- **Median-per-source ranking AUC**: Mahalanobis strong (0.783, p_Bonf 0.0003),
-  EIF weak but real (0.596), LOF not significant (0.562).
-
-The max-aggregated per-source AUC looks much stronger for all three, but it is
-upward-biased by a max-of-many effect from prolific repeaters that the null does
-not reproduce, so it is explicitly **not** the headline. The defensible headline
-is the median AUC plus the per-sub-burst tail enrichment.
-
-Top non-repeater anomalies feeding the Phase 2 shortlist: **FRB20200321E** and
-**FRB20181119D**.
+- The validated detector is **CBLOF + LOF + kNN**. A max-aggregated subspace
+  variant had the highest injection-recovery sensitivity but was rejected by the
+  specificity check, because its top-ranked real bursts were unstable across random
+  seeds with no separated score tail. Sensitivity without specificity is a mirage.
+- The pipeline reliably recovers global, local, subspace and contextual anomalies,
+  and (via CBLOF) collective anomalies large enough to form their own cluster. One
+  honest blind spot remains: a small embedded micro-cluster, below the cluster
+  method's resolution, is not recovered by any method.
+- The output is a flagged candidate shortlist of morphologically anomalous bursts,
+  those ranked anomalous by two or more independent methods. Each is annotated by
+  the reliability of the fit that drives its anomaly, but nothing is removed: a
+  large relative fit error on a narrow or narrowband burst is the expected signature
+  of a real extreme event, not a fit failure, so the artifact-versus-real call is
+  deferred to Phase 2, where the waterfall is visible directly.
 
 ## Repository layout
 
 ```
-src/frb_anomaly/        Shared Python module (catalogue readers, utilities)
-Phase 1/notebooks/cat2/ Catalog 2 pipeline: cleaning, methods, validation
-Phase 1/scripts/        One-off exploration scripts
-data/raw/               Downloaded catalogue + SOURCE.txt provenance
-data/processed/         Feature tables and method scores produced by the notebooks
-reports/                Result figures (written report to follow)
-requirements.txt        Runtime dependencies
-requirements-dev.txt    Development dependencies (pytest)
+src/frb_anomaly/            Importable package: catalogue reader, outlier scorers, anomaly generators
+Phase 1/notebooks/cat2/     Catalog 2 pipeline: 01 cleaning, 02 methods, 03 injection-recovery,
+                            04 candidate-validation, 05 artifact-flagging
+Phase 1/notebooks/archive/  Retired approaches, kept for provenance
+Phase 1/scripts/            One-off exploration scripts
+tests/                      pytest suite for the package
+data/raw/                   Downloaded catalogue + SOURCE.txt provenance
+data/processed/             Feature tables, method scores and the candidate shortlist
+reports/Phase 1/figures/    Result figures
+requirements.txt            Runtime dependencies
+requirements-dev.txt        Development dependencies (pytest)
 ```
 
 ## Package
 
-`src/frb_anomaly/` is an importable Python package containing shared utilities
-used across the analysis notebooks.
+`src/frb_anomaly/` is an importable Python package of the reusable, unit-tested
+pieces shared across the notebooks.
 
-`data.py` provides three public functions:
+- `data.py`: catalogue loading. `read_votable(path)` hand-parses a VOTable file
+  (the XML catalogue format used by CHIME/FRB and IVOA-compliant archives) into a
+  `(fields, df)` pair using the Python standard library only; `load_catalog2()`
+  loads the Catalog 2 CSV; `_local(tag)` strips XML namespace prefixes.
+- `methods.py`: the outlier scorers (LOF, kNN, CBLOF, and the subspace ensemble),
+  each returning a per-burst score with the convention that higher means more
+  anomalous.
+- `injection.py`: the synthetic anomaly generators (one per geometry), a
+  `Calibration` that binds them to a dataset, and the recovery metric.
 
-- `read_votable(path)` -- hand-parses a VOTable file (the XML catalogue format
-  used by CHIME/FRB and IVOA-compliant archives) into a `(fields, df)` pair.
-  `fields` is a list of dicts describing each column (name, datatype, unit,
-  description). `df` is a pandas DataFrame with numeric columns coerced from
-  text and empty cells left as NaN. Parsing uses the Python standard library
-  only, so every step is transparent.
-- `load_catalog2()` -- loads the Catalog 2 CSV from `data/raw/` and returns a
-  DataFrame directly.
-- `_local(tag)` -- strips the XML namespace prefix from a tag string so element
-  matching works regardless of the namespace URL declared in the file.
-
-The test suite in `tests/test_data.py` covers all three: unit tests for `_local`
-and `read_votable` run against a small hand-written fixture VOTable (no real data
-file needed), and integration tests for `load_catalog2` run against the real
-catalogue and assert expected columns, row count, and numeric dtypes.
+The `tests/` suite covers all three modules, including a named regression test
+guarding the local-outlier generator against a past bug.
 
 ## Reproducing
 
@@ -113,8 +123,9 @@ jupyter lab
 ```
 
 Run the notebooks in order within `Phase 1/notebooks/cat2/`: `01_cleaning_cat2`,
-then `02_methods_cat2`, then `03_validation_cat2`. They read from `data/raw/`,
-write feature tables and scores to `data/processed/phase_1/`, and write figures
+`02_methods_cat2`, `03_injection_recovery_cat2`, `04_candidate_validation_cat2`,
+`05_artifact_flagging_cat2`. They read from `data/raw/`, write feature tables,
+scores and the candidate shortlist to `data/processed/phase_1/`, and write figures
 to `reports/Phase 1/figures/`. Developed against Python 3.11.
 
 To run the test suite:
