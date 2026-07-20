@@ -2,7 +2,14 @@
 
 import numpy as np
 
-from frb_anomaly.methods import cblof_scores, knn_scores, lof_scores, subspace_scores
+from frb_anomaly.methods import (
+    cad_scores,
+    cblof_scores,
+    eif_scores,
+    knn_scores,
+    lof_scores,
+    subspace_scores,
+)
 
 
 def _planted_in_top(scores, n_outliers):
@@ -44,6 +51,19 @@ def test_cblof_recovers_global_outliers(synthetic_features):
 def test_subspace_max_recovers_global_outliers(synthetic_features):
     X, k = synthetic_features
     assert _planted_in_top(subspace_scores(X, agg="max"), k)
+
+
+def test_eif_recovers_global_outliers(synthetic_features):
+    X, k = synthetic_features
+    assert _planted_in_top(eif_scores(X), k)
+
+
+def test_cad_recovers_global_outliers(synthetic_features):
+    X, k = synthetic_features
+    # Arbitrary context/behaviour split; the planted outliers are displaced on every
+    # feature, so they read as anomalous regardless of which columns play which role.
+    context_idx, behaviour_idx = [0, 1], [2, 3, 4, 5]
+    assert _planted_in_top(cad_scores(X, context_idx, behaviour_idx), k)
 
 
 # ---------------------------------------------------------------------------

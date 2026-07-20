@@ -1,15 +1,15 @@
 """Unsupervised outlier-detection scorers for Catalog 2 morphological features.
 
 Each scorer takes a feature matrix and returns a per-row anomaly score under the shared
-convention that a higher score means more anomalous. These are the standalone, reusable
-form of the methods used in 02_methods_cat2.ipynb, imported by the candidate-validation
-notebook (04). CAD and the Extended Isolation Forest are not included here: CAD needs a
-separate context/behaviour split and EIF depends on the optional isotree build, so both
-remain in the notebooks.
+convention that a higher score means more anomalous. This is the single canonical,
+unit-tested implementation of all six Phase 1 methods; 02_methods_cat2.ipynb,
+03_injection_recovery_cat2.ipynb and 04_candidate_validation_cat2.ipynb all score through
+these functions rather than keeping their own copies.
 """
 
 import numpy as np
 import pandas as pd
+from isotree import IsolationForest as ExtendedIsolationForest
 from sklearn.cluster import KMeans
 from sklearn.neighbors import LocalOutlierFactor, NearestNeighbors
 
@@ -22,6 +22,22 @@ def lof_scores(X, k=75):
     """
     lof = LocalOutlierFactor(n_neighbors=k).fit(X)
     return -lof.negative_outlier_factor_
+
+
+def eif_scores(X, ntrees=100, sample_size=256, random_seed=42, ndim=None):
+    """Extended Isolation Forest score (higher = more isolated => more anomalous).
+
+    ndim defaults to the full feature count: every split is a random hyperplane through
+    all features (full extension), not an axis-aligned cut. predict() already returns the
+    standardised [0, 1] anomaly score under the higher-is-more-anomalous convention.
+    """
+    if ndim is None:
+        ndim = X.shape[1]
+    eif = ExtendedIsolationForest(
+        ndim=ndim, ntrees=ntrees, sample_size=sample_size, random_seed=random_seed
+    )
+    eif.fit(X)
+    return eif.predict(X)
 
 
 def knn_scores(X, k=20):
@@ -71,3 +87,20 @@ def subspace_scores(X, seed=42, agg="max", n_subspaces=20, k=20):
         lof = LocalOutlierFactor(n_neighbors=k).fit(X[:, cols])
         ranks[:, t] = pd.Series(-lof.negative_outlier_factor_).rank(ascending=True).to_numpy()
     return ranks.max(axis=1) if agg == "max" else ranks.mean(axis=1)
+
+
+def cad_scores(X, context_idx, behaviour_idx, k=50):
+    """Conditional anomaly detection: distance to context-neighbours in morphology space.
+
+    context_idx and behaviour_idx are column indices into X selecting the observational
+    context (e.g. DM, peak frequency) and the intrinsic morphology features respectively.
+    For each row, find its k nearest neighbours in context space, then score it by its mean
+    distance, in morphology space, from those neighbours (higher = more anomalous: its
+    morphology is atypical for rows sharing its observational context).
+    """
+    Xc = X[:, context_idx]
+    Xb = X[:, behaviour_idx]
+    nn = NearestNeighbors(n_neighbors=k + 1).fit(Xc)
+    _, neighbours = nn.kneighbors(Xc)
+    neighbours = neighbours[:, 1:]
+    return np.array([np.linalg.norm(Xb[i] - Xb[neighbours[i]], axis=1).mean() for i in range(len(X))])
