@@ -1,0 +1,4 @@
+method,A_global,B_local,C_collective,C_separated,D_subspace,E_contextual
+lof,0.5,0.5,>2.0,>2.0,1.5,1.5
+knn,0.5,0.75,>2.0,>2.0,1.5,1.5
+cblof,0.5,1.0,>2.0,1.0,>2.0,1.5
