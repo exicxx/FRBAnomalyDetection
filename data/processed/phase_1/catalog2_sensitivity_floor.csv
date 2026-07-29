@@ -1,0 +1,8 @@
+method,A_global,B_local,C_collective,C_separated,D_subspace,E_contextual
+cad,0.5,1.0,>2.0,>2.0,>2.0,1.5
+cblof,0.5,1.0,>2.0,1.0,>2.0,1.5
+eif,0.5,1.0,>2.0,2.0,>2.0,2.0
+knn,0.5,0.75,>2.0,>2.0,1.5,1.5
+lof,0.5,0.5,>2.0,>2.0,1.5,1.5
+subspace,0.5,0.5,>2.0,>2.0,1.5,1.5
+subspace_max,0.25,0.25,>2.0,>2.0,0.25,1.0
