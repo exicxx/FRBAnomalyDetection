@@ -2,27 +2,21 @@
 
 An independent research project to identify fast radio bursts (FRBs) whose
 properties are unusual relative to the population, using unsupervised
-anomaly detection on the public CHIME/FRB catalogues.
+anomaly detection on the public CHIME/FRB Catalog 2.
 
-The guiding question: are there bursts the standard catalogue parameters flag as
-odd, and (in the later phase) bursts that look ordinary in the numbers but
-strange in their time-frequency structure? Those are the ones a repeater-vs-nonrepeater
-framing would miss.
+The guiding question is whether there are bursts whose catalogued morphological
+parameters mark them out against the population, without appealing to the
+repeater versus non-repeater split that most FRB classification work is built
+around. A burst can be entirely ordinary for its class and still be an outlier in
+the population, and that is the object of the search.
 
 ## Status
 
-- **Phase 1 (tabulated-parameter baseline): analytically complete.** The full
-  Catalog 2 pipeline is built and run end to end: cleaning, six unsupervised
-  outlier-detection methods, validation of the detector by injection-recovery, a
-  real-data specificity check, and a flagged candidate shortlist. A short written
-  report is in progress.
-- **Phase 2 (the core): not started.** Unsupervised representation learning on the
-  dynamic spectra (waterfalls), starting from the Phase 1 candidates, with an
-  instrumental-vs-astrophysical triage and a comparison against this baseline.
-
-Phase 1 is deliberately framed as preliminary baseline work, not the end goal. It
-exists to learn the data hands-on and to establish the baseline against which Phase
-2 is measured.
+The Catalog 2 pipeline is built and run end to end: cleaning, six unsupervised
+outlier-detection methods, validation of the detector by injection-recovery, a
+real-data specificity check, and a flagged candidate shortlist of morphologically
+anomalous bursts. The analysis is complete and the accompanying written report is
+in final editing.
 
 ## Data
 
@@ -33,7 +27,7 @@ All data is public CHIME/FRB catalogue data. Provenance is recorded in
   DOI [10.11570/25.0066](https://doi.org/10.11570/25.0066), The CHIME/FRB
   Collaboration 2026, ApJS 283 (arXiv:2601.09399).
 
-## Method (Phase 1)
+## Method
 
 Each burst is described by its tabulated morphological parameters: dispersion
 measure, width, flux, fluence, two empirical spectral-shape parameters, peak
@@ -64,7 +58,7 @@ perfectly while flagging everything on real data. A specificity check on the rea
 bursts (score concentration, and stability of the top-ranked bursts across random
 seeds) is therefore applied before a method is trusted.
 
-## Key Phase 1 result (Catalog 2)
+## Results
 
 - The validated detector is **CBLOF + LOF + kNN**. A max-aggregated subspace
   variant had the highest injection-recovery sensitivity but was rejected by the
@@ -79,7 +73,15 @@ seeds) is therefore applied before a method is trusted.
   the reliability of the fit that drives its anomaly, but nothing is removed: a
   large relative fit error on a narrow or narrowband burst is the expected signature
   of a real extreme event, not a fit failure, so the artifact-versus-real call is
-  deferred to Phase 2, where the waterfall is visible directly.
+  left open rather than resolved by discarding candidates.
+
+## Possible extensions
+
+The natural continuation is unsupervised representation learning on the dynamic
+spectra of the flagged candidates, which would allow the instrumental versus
+astrophysical call left open above to be made by inspecting the burst structure
+directly rather than the fitted parameters. That work is outside the scope of this
+repository.
 
 ## Repository layout
 
@@ -102,7 +104,7 @@ requirements-dev.txt        Development dependencies (pytest)
 ## Package
 
 `src/frb_anomaly/` is an importable Python package of the reusable, unit-tested
-pieces shared across the notebooks.
+pieces shared across the analysis.
 
 - `data.py`: catalogue loading. `read_votable(path)` hand-parses a VOTable file
   (the XML catalogue format used by CHIME/FRB and IVOA-compliant archives) into a
@@ -139,9 +141,9 @@ pytest
 
 ## References
 
-This project builds directly on representation learning for FRB dynamic spectra
-(arXiv:2412.12394), taking it to full Catalog 2 scale with anomaly detection as
-the primary goal. Related work:
+Anomaly detection on the tabulated catalogue parameters, as done here, is
+complementary to work that learns representations directly from FRB dynamic
+spectra (arXiv:2412.12394). Related work:
 
 - The ROAD to discovery: ML anomaly detection in radio astronomy spectrograms (arXiv:2307.01054)
 - Repeating vs nonrepeating FRBs, deep learning morphological characterization (arXiv:2509.06208)
