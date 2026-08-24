@@ -88,11 +88,13 @@ src/frb_anomaly/            Importable package: catalogue reader, outlier scorer
 Phase 1/notebooks/cat2/     Catalog 2 pipeline: 01 cleaning, 02 methods, 03 injection-recovery,
                             04 candidate-validation, 05 artifact-flagging
 Phase 1/notebooks/archive/  Retired approaches, kept for provenance
-Phase 1/scripts/            One-off exploration scripts
+Phase 1/scripts/            Standalone analyses, catalogue inspection and within-source scatter
 tests/                      pytest suite for the package
 data/raw/                   Downloaded catalogue + SOURCE.txt provenance
 data/processed/             Feature tables, method scores and the candidate shortlist
 reports/Phase 1/figures/    Result figures
+reports/Phase 1/results_data/
+                            Persisted Results-section source data and LaTeX table fragments
 requirements.txt            Runtime dependencies
 requirements-dev.txt        Development dependencies (pytest)
 ```
@@ -106,9 +108,9 @@ pieces shared across the notebooks.
   (the XML catalogue format used by CHIME/FRB and IVOA-compliant archives) into a
   `(fields, df)` pair using the Python standard library only; `load_catalog2()`
   loads the Catalog 2 CSV; `_local(tag)` strips XML namespace prefixes.
-- `methods.py`: the outlier scorers (LOF, kNN, CBLOF, and the subspace ensemble),
-  each returning a per-burst score with the convention that higher means more
-  anomalous.
+- `methods.py`: the six outlier scorers (LOF, kNN, EIF, CBLOF, the subspace
+  ensemble and the conditional detector), each returning a per-burst score with
+  the convention that higher means more anomalous.
 - `injection.py`: the synthetic anomaly generators (one per geometry), a
   `Calibration` that binds them to a dataset, and the recovery metric.
 
