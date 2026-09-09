@@ -14,9 +14,13 @@ the population, and that is the object of the search.
 
 The Catalog 2 pipeline is built and run end to end: cleaning, six unsupervised
 outlier-detection methods, validation of the detector by injection-recovery, a
-real-data specificity check, and a flagged candidate shortlist of morphologically
-anomalous bursts. The analysis is complete and the accompanying written report is
-in final editing.
+real-data specificity check, and a flagged candidate shortlist of 36 morphologically
+anomalous bursts. The analysis and write-up are complete.
+
+The full report is at
+[`reports/Phase 1/Cox_Elijah_FRB_Report.pdf`](reports/Phase%201/Cox_Elijah_FRB_Report.pdf).
+It has been submitted to arXiv; this section will be updated with the arXiv link
+once it clears moderation.
 
 ## Data
 
@@ -68,12 +72,17 @@ seeds) is therefore applied before a method is trusted.
   and (via CBLOF) collective anomalies large enough to form their own cluster. One
   honest blind spot remains: a small embedded micro-cluster, below the cluster
   method's resolution, is not recovered by any method.
-- The output is a flagged candidate shortlist of morphologically anomalous bursts,
-  those ranked anomalous by two or more independent methods. Each is annotated by
-  the reliability of the fit that drives its anomaly, but nothing is removed: a
-  large relative fit error on a narrow or narrowband burst is the expected signature
-  of a real extreme event, not a fit failure, so the artifact-versus-real call is
-  left open rather than resolved by discarding candidates.
+- The output is a flagged candidate shortlist of 36 morphologically anomalous
+  bursts, those ranked anomalous by two or more independent methods. Each is
+  annotated by the reliability of the fit that drives its anomaly, but nothing is
+  removed: a large relative fit error on a narrow or narrowband burst is the
+  expected signature of a real extreme event, not a fit failure, so the
+  artifact-versus-real call is left open rather than resolved by discarding
+  candidates.
+- Spectral running, flux and fluence, the three parameters most exposed to beam
+  position, drive 52.8% of the shortlist against a 26.2% population baseline
+  (3.25σ). Filtering the shortlist on beam-affected drivers and on fits whose
+  error exceeds the measurement leaves four candidates.
 
 ## Possible extensions
 
@@ -138,13 +147,3 @@ To run the test suite:
 pip install -r requirements-dev.txt
 pytest
 ```
-
-## References
-
-Anomaly detection on the tabulated catalogue parameters, as done here, is
-complementary to work that learns representations directly from FRB dynamic
-spectra (arXiv:2412.12394). Related work:
-
-- The ROAD to discovery: ML anomaly detection in radio astronomy spectrograms (arXiv:2307.01054)
-- Repeating vs nonrepeating FRBs, deep learning morphological characterization (arXiv:2509.06208)
-- Spectral morphological division of FRBs with CHIME/FRB Catalog 2 (arXiv:2601.16048)
