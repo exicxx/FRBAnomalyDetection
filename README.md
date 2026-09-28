@@ -18,7 +18,7 @@ real-data specificity check, and a flagged candidate shortlist of 36 morphologic
 anomalous bursts. The analysis and write-up are complete.
 
 The full report is at
-[`reports/Phase 1/Cox_Elijah_FRB_Report.pdf`](reports/Phase%201/Cox_Elijah_FRB_Report.pdf).
+[`reports/Cox_Elijah_FRB_Report.pdf`](reports/Cox_Elijah_FRB_Report.pdf).
 It is archived on Zenodo, and the DOI will be added here once minted.
 
 ## Data
@@ -95,16 +95,16 @@ repository.
 
 ```
 src/frb_anomaly/            Importable package: catalogue reader, outlier scorers, anomaly generators
-Phase 1/notebooks/cat2/     Catalog 2 pipeline: 01 cleaning, 02 methods, 03 injection-recovery,
+notebooks/cat2/             Catalog 2 pipeline: 01 cleaning, 02 methods, 03 injection-recovery,
                             04 candidate-validation, 05 artifact-flagging
-Phase 1/notebooks/archive/  Retired approaches, kept for provenance
-Phase 1/scripts/            Standalone analyses, catalogue inspection and within-source scatter
+notebooks/archive/          Retired approaches, kept for provenance
+scripts/                    Standalone analyses, catalogue inspection and within-source scatter
 tests/                      pytest suite for the package
 data/raw/                   Downloaded catalogue + SOURCE.txt provenance
 data/processed/             Feature tables, method scores and the candidate shortlist
-reports/Phase 1/figures/    Result figures
-reports/Phase 1/results_data/
-                            Persisted Results-section source data and LaTeX table fragments
+reports/                    The report PDF
+reports/figures/            Result figures
+reports/results_data/       Persisted Results-section source data and LaTeX table fragments
 requirements.txt            Runtime dependencies
 requirements-dev.txt        Development dependencies (pytest)
 ```
@@ -134,11 +134,11 @@ pip install -r requirements.txt
 jupyter lab
 ```
 
-Run the notebooks in order within `Phase 1/notebooks/cat2/`: `01_cleaning_cat2`,
+Run the notebooks in order within `notebooks/cat2/`: `01_cleaning_cat2`,
 `02_methods_cat2`, `03_injection_recovery_cat2`, `04_candidate_validation_cat2`,
 `05_artifact_flagging_cat2`. They read from `data/raw/`, write feature tables,
-scores and the candidate shortlist to `data/processed/phase_1/`, and write figures
-to `reports/Phase 1/figures/`. Developed against Python 3.11.
+scores and the candidate shortlist to `data/processed/`, and write figures
+to `reports/figures/`. Developed against Python 3.11.
 
 To run the test suite:
 

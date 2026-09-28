@@ -16,10 +16,9 @@ pd.set_option("display.max_rows", None)
 pd.set_option("display.max_columns", None)
 pd.set_option("display.width", 200)
 
-# Path relative to this script. Script now lives at Phase 1/scripts/, so two parents
-# up reaches the project root where data/ lives. parents[0] = scripts/, parents[1] = Phase 1/,
-# parents[2] = project root.
-RAW = Path(__file__).resolve().parents[2] / "data" / "raw" / "chime_cat1_table2.vot"
+# Path relative to this script. Script lives at scripts/, so one parent up reaches the
+# project root where data/ lives. parents[0] = scripts/, parents[1] = project root.
+RAW = Path(__file__).resolve().parents[1] / "data" / "raw" / "chime_cat1_table2.vot"
 
 # VOTable tags carry an XML namespace prefix; this strips it so "FIELD" matches.
 def local(tag):

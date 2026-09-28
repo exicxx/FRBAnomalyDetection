@@ -3,7 +3,7 @@ Empirical floor on the internal homogeneity of a real FRB sub-population.
 
 The Type C collective injection (``gen_type_c`` in ``src/frb_anomaly/injection.py``)
 places twenty near-identical points at a scatter of sigma = 0.05 in the scaled feature
-space. No detector in the Phase 1 sweep recovers that geometry at any injected strength.
+space. No detector in the sweep recovers that geometry at any injected strength.
 Read on its own, that null describes only the resolution of the detectors.
 
 This script converts it into a statement about the data by measuring how tightly real FRB
@@ -30,7 +30,7 @@ Three limits apply to the comparison and belong alongside any reported figure.
    so its within-source spread is near zero and depresses the eight-feature mean. The
    summary is reported both with and without it.
 
-Reads ``data/processed/phase_1/catalog2_features_scaled.csv``. Fits nothing and writes
+Reads ``data/processed/catalog2_features_scaled.csv``. Fits nothing and writes
 nothing.
 """
 
@@ -38,10 +38,10 @@ from pathlib import Path
 
 import pandas as pd
 
-# parents[0] = scripts/, parents[1] = Phase 1/, parents[2] = project root, where data/ lives.
+# parents[0] = scripts/, parents[1] = project root, where data/ lives.
 SCALED = (
-    Path(__file__).resolve().parents[2]
-    / "data" / "processed" / "phase_1" / "catalog2_features_scaled.csv"
+    Path(__file__).resolve().parents[1]
+    / "data" / "processed" / "catalog2_features_scaled.csv"
 )
 
 FEATURES = [

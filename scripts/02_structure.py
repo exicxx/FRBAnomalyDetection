@@ -7,8 +7,8 @@ brightness/scattering values are limits rather than real measurements.
 import sys
 from pathlib import Path
 
-# Script lives at Phase 1/scripts/, so two parents up reaches the project root where src/ lives.
-sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
+# Script lives at scripts/, so one parent up reaches the project root where src/ lives.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from frb_anomaly import data
 
 fields, df = data.load_catalog1()

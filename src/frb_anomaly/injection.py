@@ -1,4 +1,4 @@
-"""Synthetic anomaly injection and recovery measurement for Phase 1 validation.
+"""Synthetic anomaly injection and recovery measurement for detector validation.
 
 The injection-recovery harness (03_injection_recovery_cat2.ipynb) validates the
 outlier-detection methods by injecting synthetic anomalies of known geometry into the real

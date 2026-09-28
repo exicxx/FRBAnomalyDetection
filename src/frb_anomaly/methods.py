@@ -2,7 +2,7 @@
 
 Each scorer takes a feature matrix and returns a per-row anomaly score under the shared
 convention that a higher score means more anomalous. This is the single canonical,
-unit-tested implementation of all six Phase 1 methods; 02_methods_cat2.ipynb,
+unit-tested implementation of all six methods; 02_methods_cat2.ipynb,
 03_injection_recovery_cat2.ipynb and 04_candidate_validation_cat2.ipynb all score through
 these functions rather than keeping their own copies.
 """
