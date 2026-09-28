@@ -19,8 +19,7 @@ anomalous bursts. The analysis and write-up are complete.
 
 The full report is at
 [`reports/Phase 1/Cox_Elijah_FRB_Report.pdf`](reports/Phase%201/Cox_Elijah_FRB_Report.pdf).
-It has been submitted to arXiv; this section will be updated with the arXiv link
-once it clears moderation.
+It is archived on Zenodo, and the DOI will be added here once minted.
 
 ## Data
 
